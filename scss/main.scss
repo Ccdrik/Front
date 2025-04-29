@@ -1,0 +1,162 @@
+@import url("/node_modules/bootstrap-icons/font/bootstrap-icons.css");
+@import 'custom';
+
+html {
+    position: relative;
+    min-height: 100%;
+    background-color: $black;
+
+}
+
+
+main {
+    margin-bottom: 270px;
+    background-color: $black;
+
+}
+
+h1 {
+    color: $primary;
+}
+
+a,
+.navbar-brand,
+.nav-link,
+h2 {
+    color: $black;
+    font-family: $font-family-serif;
+    font-size: 22px;
+}
+
+.navbar-brand {
+    font-size: 30px;
+    font-style: bold;
+}
+
+.navbar-toggler-icon {
+    filter: invert(1);
+}
+
+
+
+.hero-scene {
+    background: url(../Images/Fondresize.jpg) center center/cover;
+    width: 100%;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $black;
+
+}
+
+.hero-scene-content h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    padding: 0 1rem;
+}
+
+
+.search-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: auto;
+    gap: 10px;
+    background-color: $dark;
+    margin-top: 5px;
+
+}
+
+.search-form {
+    border-radius: 10%;
+}
+
+.form-navigation {
+
+
+
+
+    .search-form input,
+    .search-form button {
+        padding: 8px;
+        font-size: 16px;
+        background-color: $primary;
+
+    }
+
+    .input-group-text,
+    .form-control {
+        background-color: $primary;
+        margin-top: 10px;
+    }
+
+
+
+}
+
+.date {
+    width: 300px;
+    height: 50px;
+
+    font-size: 18px;
+
+}
+
+button.btn-primary {
+    width: 40%;
+    display: block;
+    margin: 0 auto;
+    background-color: $primary;
+    color: $black;
+    font-family: $font-family-serif;
+    font-size: 18px;
+    margin-bottom: 10px;
+
+
+}
+
+.presentation {
+    margin-top: 10px;
+    color: $primary;
+}
+
+.container {
+
+    a,
+    .form-label,
+    .form-control {
+
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+    }
+
+    .form-label {
+        color: $primary;
+    }
+
+
+}
+
+
+footer.footer {
+    padding: 15px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    color: $black;
+    font-family: $font-family-serif;
+    font-size: 18px;
+}
+
+
+
+@media screen and (max-width: 576px) {
+    .hero-scene-content h1 {
+        font-size: 1.5rem;
+    }
+}
