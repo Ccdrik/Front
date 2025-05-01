@@ -15,8 +15,12 @@ main {
 
 }
 
-h1 {
+h1,
+p,
+.erreur {
     color: $primary;
+
+
 }
 
 a,
@@ -38,7 +42,6 @@ h2 {
 }
 
 
-
 .hero-scene {
     background: url(../Images/Fondresize.jpg) center center/cover;
     width: 100%;
@@ -56,6 +59,49 @@ h2 {
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
     text-align: center;
     padding: 0 1rem;
+
+}
+
+
+.chauffeur {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+    gap: 20px;
+
+}
+
+
+
+
+.chauffeur-photo {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+    margin: 0;
+    display: inline-block;
+}
+
+.chauffeur-photo:hover {
+    transform: scale(1.05);
+}
+
+
+.heure-input {
+    width: 50%;
+    margin: 0 auto;
+}
+
+
+
+
+
+.input-group-text input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
 }
 
 
@@ -141,6 +187,8 @@ button.btn-primary {
 
 
 }
+
+
 
 
 footer.footer {
