@@ -11982,6 +11982,12 @@ main {
   background-color: #263238;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 h1, .h1,
 p,
 a,

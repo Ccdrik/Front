@@ -12,7 +12,12 @@ html {
 main {
     margin-bottom: 270px;
     background-color: $black;
+}
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 h1,
@@ -193,6 +198,7 @@ button.btn-primary {
 
 
 footer.footer {
+
     padding: 15px;
     position: absolute;
     bottom: 0;
