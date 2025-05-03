@@ -9,6 +9,8 @@ export const allRoutes = [
     new Route("/account", "Mon Compte", "pages/auth/account.html", ["passager", "chauffeur", "employe", "admin"]),
     new Route("/editPassword", "Changement de mot de passe", "pages/auth/editPassword.html", ["passager", "chauffeur", "employe", "admin"]),
     new Route("/covoiturages", "Accés covoiturages", "pages/covoiturages.html", ["passager", "chauffeur", "employe", "admin"]),
+    new Route("/contact", "Contact", "pages/contact.html", []),
+    new Route("/details", "Details", "pages/details.html", []),
     new Route("/mentionslegales", "Mentions légales", "pages/mentionslegales.html", []),
 ];
 
