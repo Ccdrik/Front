@@ -7,29 +7,32 @@
 
 
 
-<section class="form-navigation">
-    <form action="#" method="GET" class="search-form container">
-        <div>
-            <h2 class="text-center">Rechercher un trajet</h2>
+<section class="mb-3">
+    <form action="#" method="GET" class="table-center">
+        <div class="table-style">
+            <div class="mt-3">
+
+                <h2 class="text-center mb-3">Rechercher un trajet</h2>
+            </div>
+
+            <div class="input-group mb-3">
+                <span class="input-group-text"><i class="bi bi-geo-alt-fill"></i></span>
+                <input class="form-control " type="text" id="depart" name="depart" required placeholder="Départ">
+            </div>
+
+
+            <div class="input-group mb-3">
+                <span class="input-group-text"><i class="bi bi-geo-alt-fill"></i></span>
+                <input class="form-control " type="text" id="arrivee" name="arrivee" required placeholder="Arrivée">
+            </div>
+
+
+            <div class="mb-3">
+                <input class="form-control date " type="date" id="date" name="date" required placeholder="Date">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Rechercher</button>
         </div>
-
-        <div class="input-group mb-3">
-            <span class="input-group-text"><i class="bi bi-geo-alt-fill"></i></span>
-            <input class="form-control " type="text" id="depart" name="depart" required placeholder="Départ">
-        </div>
-
-
-        <div class="input-group mb-3">
-            <span class="input-group-text"><i class="bi bi-geo-alt-fill"></i></span>
-            <input class="form-control " type="text" id="arrivee" name="arrivee" required placeholder="Arrivée">
-        </div>
-
-
-        <div class="mb-3">
-            <input class="form-control date " type="date" id="date" name="date" required placeholder="Date">
-        </div>
-
-        <button type="submit" class="btn btn-primary">Rechercher</button>
     </form>
 </section>
 <section>

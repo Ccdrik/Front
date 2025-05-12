@@ -12031,6 +12031,51 @@ h2,
   padding: 0 1rem;
 }
 
+.table-center {
+  width: 100%;
+  overflow-x: auto;
+  margin: 30px auto;
+  display: flex;
+  justify-content: center;
+}
+
+.table-style {
+  width: 50%;
+  min-width: 600px;
+  border-collapse: collapse;
+  background-color: #91e2a8;
+  font-family: "Hind Madurai", serif;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.input-group,
+.form-control,
+.heure-input {
+  width: 50%;
+  margin: 0 auto;
+}
+
+th,
+td {
+  padding: 12px 16px;
+  border: 1px solid #3b4d56;
+  text-align: left;
+}
+
+th {
+  background-color: #B4EBCA;
+  color: #263238;
+}
+
+tr:nth-child(even) {
+  background-color: #304047;
+}
+
+tr:hover {
+  background-color: #3b4d56;
+}
+
 .chauffeur {
   display: flex;
   align-items: center;
@@ -12054,11 +12099,6 @@ h2,
   transform: scale(1.05);
 }
 
-.heure-input {
-  width: 50%;
-  margin: 0 auto;
-}
-
 .input-group-text input[type=checkbox] {
   width: 24px;
   height: 24px;
@@ -12080,22 +12120,6 @@ h2,
 }
 .checkbox-center .form-check-label {
   color: #B4EBCA;
-}
-
-.search-form {
-  border-radius: 10%;
-}
-
-.form-navigation .search-form input,
-.form-navigation .search-form button {
-  padding: 8px;
-  font-size: 16px;
-  background-color: #B4EBCA;
-}
-.form-navigation .input-group-text,
-.form-navigation .form-control {
-  background-color: #B4EBCA;
-  margin-top: 10px;
 }
 
 .checkbox {
@@ -12125,26 +12149,12 @@ button.btn-primary {
   color: #B4EBCA;
 }
 
-.container a,
-.container .form-label,
-.container .form-control {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
-}
-.container .form-label {
-  color: #B4EBCA;
-}
-
 .contact form {
-  /* On centre le formulaire */
   margin: 0 auto;
   width: 400px;
-  /* Le contour du formulaire */
   padding: 1em;
   border: 1px solid #91e2a8;
-  border-radius: 1em;
+  border-radius: 10px;
 }
 .contact ul {
   list-style: none;
@@ -12155,7 +12165,6 @@ button.btn-primary {
   margin-top: 1em;
 }
 .contact label {
-  /* Taille et alignement uniformes */
   display: inline-block;
   width: 90px;
   text-align: left;
