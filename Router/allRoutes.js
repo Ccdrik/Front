@@ -15,6 +15,9 @@ export const allRoutes = [
     new Route("/creertrajet", "Creation d'un trajet", "pages/creertrajet.html", ["chauffeur"]),
     new Route("/edittrajet", "Modification de mon trajet", "pages/edittrajet.html", ["chauffeur"]),
     new Route("/ajouter-vehicule", "Ajouter un véhicule", "pages/ajouter-vehicule.html", ["chauffeur"]),
+    new Route("/mestrajets", "Mes trajets", "pages//mestrajets.html", ["chauffeur"]),
+    new Route("/administrateur", "Espace Administrateur", "pages//administrateur.html", ["admin"]),
+    new Route("/reservations", "Reservations", "pages/reservations.html", []),
 ];
 
 //Le titre s'affiche comme ceci : Route.titre - websitename

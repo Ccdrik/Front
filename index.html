@@ -39,7 +39,9 @@
                         <li class="nav-item" data-show="chauffeur">
                             <a class="nav-link" href="/edittrajet">Modifier mon trajet</a>
                         </li>
-
+                        <li class="nav-item" data-show="chauffeur">
+                            <a class="nav-link" href="/mestrajets">Mes trajets</a>
+                        </li>
                         <li class="nav-item" data-show="chauffeur">
                             <a class="nav-link" href="/ajouter-vehicule">Ajouter un véhicule</a>
                         </li>
@@ -48,15 +50,17 @@
                             <a class="nav-link" href="/account">Mon compte</a>
                         </li>
                         <li class="nav-item" data-show="admin">
-                            <button class="nav-link" id="signout-btn">Administrateur</button>
+                            <button class="nav-link" href="/administrateur">Administrateur</button>
+                        </li>
+                        <li class="nav-item" data-show="connected">
+                            <button class="nav-link" href="/reservations">Reservations</button>
                         </li>
 
                         <li class="nav-item" data-show="disconnected">
                             <a class="nav-link" href="/signin">Connexion</a>
                         </li>
                         <li class="nav-item" data-show="connected">
-                            <button class="nav-link signout-btn">Déconnexion</button>
-
+                            <button class="nav-link" id="signout-btn">Déconnexion</button>
                         </li>
                     </ul>
         </nav>
@@ -75,7 +79,7 @@
         </div>
 
     </footer>
-    <script src="logout.js"></script>
+    <script src="/js/auth/logout.js"></script>
     <script src="js/script.js"></script>
     <script type="module" src="Router/Router.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
