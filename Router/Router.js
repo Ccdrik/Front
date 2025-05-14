@@ -1,22 +1,21 @@
 import Route from "./Route.js";
 import { allRoutes, websiteName } from "./allRoutes.js";
-
 import { isConnected, getRole, showAndHideElementsForRoles } from "../js/auth/auth.js";
 
-// Route 404 (page introuvable)
+// Test d'importation
+console.log("isConnected:", isConnected);
+
 const route404 = new Route("404", "Page introuvable", "/pages/404.html", []);
 
-// Récupère la route correspondant à une URL
 const getRouteByUrl = (url) => {
     return allRoutes.find(route => route.url === url) || route404;
 };
 
-// Charge dynamiquement le contenu d’une page
 const LoadContentPage = async () => {
     const path = window.location.pathname;
     const actualRoute = getRouteByUrl(path);
 
-    // Gérer les autorisations
+    // Gestion des autorisations
     const allRolesArray = actualRoute.authorize;
     if (allRolesArray.length > 0) {
         if (allRolesArray.includes("disconnected")) {
@@ -34,30 +33,25 @@ const LoadContentPage = async () => {
     }
 
     try {
-        // Charger le HTML de la page
         const html = await fetch(actualRoute.pathHtml).then(res => res.text());
         document.getElementById("main-page").innerHTML = html;
 
-        // Charger dynamiquement le JS associé, si besoin
         if (actualRoute.pathJS) {
             try {
                 const module = await import(actualRoute.pathJS);
                 if (module && typeof module.default === "function") {
-                    module.default(); // Si module exporte une fonction par défaut
+                    module.default();
                 } else if (module.initSignupPage) {
-                    module.initSignupPage(); // Exemple : page d'inscription
+                    module.initSignupPage();
                 } else if (module.initSigninPage) {
-                    module.initSigninPage(); // Exemple : page de connexion
+                    module.initSigninPage();
                 }
             } catch (e) {
                 console.error("Erreur lors du chargement JS :", e);
             }
         }
 
-        // Mettre à jour le titre
         document.title = `${actualRoute.title} - ${websiteName}`;
-
-        // Gérer affichage selon rôles
         showAndHideElementsForRoles();
 
     } catch (error) {
@@ -66,7 +60,6 @@ const LoadContentPage = async () => {
     }
 };
 
-// Gère les événements de navigation (liens)
 const routeEvent = (event) => {
     event = event || window.event;
     event.preventDefault();
@@ -74,14 +67,10 @@ const routeEvent = (event) => {
     LoadContentPage();
 };
 
-// Événement retour arrière
 window.onpopstate = LoadContentPage;
 window.route = routeEvent;
 
-// Chargement initial
 LoadContentPage();
-
-
 
 const path = window.location.pathname;
 

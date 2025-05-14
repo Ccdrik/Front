@@ -42,7 +42,6 @@ export function showAndHideElementsForRoles() {
     const userConnected = isConnected();
     const role = getRole();
     const elements = document.querySelectorAll('[data-show]');
-
     elements.forEach(element => {
         switch (element.dataset.show) {
             case 'disconnected':
