@@ -59,12 +59,33 @@ export function initSignupPage() {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
+        // Récupérer le rôle sélectionné
+        let role = "";
+        const selectedRole = document.querySelector('input[name="inlineRadioOptions"]:checked');
+        if (!selectedRole) {
+            alert("Veuillez sélectionner un rôle.");
+            return;
+        }
+
+        switch (selectedRole.id) {
+            case "inlineRadio1":
+                role = "ROLE_PASSAGER";
+                break;
+            case "inlineRadio2":
+                role = "ROLE_CHAUFFEUR";
+                break;
+            case "inlineRadio3":
+                role = "ROLE_PASSAGER,ROLE_CHAUFFEUR"; // option "Les Deux"
+                break;
+        }
+
         const raw = JSON.stringify({
             "nom": inputNom.value,
             "prenom": inputPreNom.value,
             "email": inputMail.value,
             "motdepasse": inputPassword.value,
-            "confirmationpassword": inputValidationPassword.value
+            "confirmationpassword": inputValidationPassword.value,
+            "role": role
         });
 
         fetch("http://127.0.0.1:8001/api/signup", {
@@ -72,8 +93,17 @@ export function initSignupPage() {
             headers: myHeaders,
             body: raw
         })
-            .then(response => response.text())
-            .then(result => console.log(result))
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert("Inscription réussie !");
+                    // stocker le rôle et token ici si tu l'as
+                    setCookie(RoleCookiename, role.includes("CHAUFFEUR") ? "chauffeur" : "passager", 7);
+                    window.location.href = "/"; // redirection vers la home ou dashboard
+                } else if (result.error) {
+                    alert("Erreur : " + result.error);
+                }
+            })
             .catch(error => console.error(error));
     }
 }
