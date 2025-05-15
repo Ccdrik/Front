@@ -6,6 +6,8 @@ export function initSignupPage() {
     const inputPassword = document.getElementById("PasswordInput");
     const inputValidationPassword = document.getElementById("ValidatePasswordInput");
     const btnValidation = document.getElementById("btn-validation-inscription");
+    const formInscription = document.getElementById("formulaire-inscription");
+
 
     if (!inputNom || !inputPreNom || !inputMail || !inputPassword || !inputValidationPassword || !btnValidation) {
         console.error("Éléments du formulaire d'inscription introuvables");
@@ -54,10 +56,23 @@ export function initSignupPage() {
         input.classList.toggle("is-invalid", !condition);
         return condition;
     }
+    async function InscrireUtilisateur() {
+        const email = inputMail.value;
 
-    function InscrireUtilisateur() {
-        const myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/json");
+        // Étape 1 : Vérifier si l'e-mail est déjà utilisé via l'API
+        const checkEmailResponse = await fetch(`http://127.0.0.1:8000/api/check-email?email=${encodeURIComponent(email)}`);
+        const emailResult = await checkEmailResponse.json();
+
+        if (!emailResult.available) {
+            alert("Cette adresse email est déjà utilisée.");
+            return;
+        }
+
+        // Étape 2 : Récupérer les infos du formulaire
+        const name = inputNom.value;
+        const prenom = inputPreNom.value;
+        const password = inputPassword.value;
+        const confirmationpassword = inputValidationPassword.value;
 
         // Récupérer le rôle sélectionné
         let role = "";
@@ -75,20 +90,26 @@ export function initSignupPage() {
                 role = "ROLE_CHAUFFEUR";
                 break;
             case "inlineRadio3":
-                role = "ROLE_PASSAGER,ROLE_CHAUFFEUR"; // option "Les Deux"
+                role = "ROLE_PASSAGER,ROLE_CHAUFFEUR";
                 break;
         }
 
+        const roles = role.includes(",") ? role.split(",") : [role];
+
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
         const raw = JSON.stringify({
-            "nom": inputNom.value,
-            "prenom": inputPreNom.value,
-            "email": inputMail.value,
-            "motdepasse": inputPassword.value,
-            "confirmationpassword": inputValidationPassword.value,
-            "role": role
+            "nom": name,
+            "prenom": prenom,
+            "email": email,
+            "motdepasse": password,
+            "confirmationpassword": confirmationpassword,
+            "roles": roles
         });
 
-        fetch("http://127.0.0.1:8001/api/signup", {
+        // Étape 3 : Envoi de l’inscription si email est libre
+        fetch("http://127.0.0.1:8000/api/signup", {
             method: "POST",
             headers: myHeaders,
             body: raw
@@ -97,9 +118,8 @@ export function initSignupPage() {
             .then(result => {
                 if (result.success) {
                     alert("Inscription réussie !");
-                    // stocker le rôle et token ici si tu l'as
                     setCookie(RoleCookiename, role.includes("CHAUFFEUR") ? "chauffeur" : "passager", 7);
-                    window.location.href = "/"; // redirection vers la home ou dashboard
+                    window.location.href = "/";
                 } else if (result.error) {
                     alert("Erreur : " + result.error);
                 }

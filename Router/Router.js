@@ -76,12 +76,24 @@ const LoadContentPage = async () => {
     }
 };
 
+document.body.addEventListener('click', (event) => {
+    const target = event.target.closest('a');
+    if (target && target.href && target.origin === window.location.origin) {
+        event.preventDefault();
+        window.history.pushState({}, '', target.pathname);
+        LoadContentPage();
+    }
+});
+
+
+
+
 const routeEvent = (event) => {
-    event = event || window.event;
     event.preventDefault();
     window.history.pushState({}, "", event.target.href);
     LoadContentPage();
 };
+
 
 window.onpopstate = LoadContentPage;
 window.route = routeEvent;

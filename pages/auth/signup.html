@@ -11,24 +11,24 @@
     <div>
         <h1 class="text-center">Inscription</h1>
     </div>
-    <form>
+    <form id="formulaire-inscription">
         <div class="mb-3">
 
-            <input type="text" class="form-control" id="NomInput" placeholder="Votre nom">
+            <input type="text" class="form-control" id="NomInput" placeholder="Votre nom" name="nom">
             <div class="invalid-feedback text-center">
                 Le nom est requis !
             </div>
         </div>
         <div class="mb-3">
 
-            <input type="text" class="form-control" id="PrenomInput" placeholder="Votre prénom">
+            <input type="text" class="form-control" id="PrenomInput" placeholder="Votre prénom" name="prenom">
             <div class="invalid-feedback text-center">
                 Le prénom est requis !
             </div>
         </div>
         <div class="mb-3">
 
-            <input type="email" class="form-control" id="EmailInput" placeholder="test@mail.fr">
+            <input type="email" class="form-control" id="EmailInput" placeholder="test@mail.fr" name="email">
             <div class="invalid-feedback text-center">
                 Le mail n'est pas valide !
             </div>
@@ -41,7 +41,7 @@
 
         <div class="mb-3 mt-3">
 
-            <input type="password" class="form-control" id="PasswordInput" placeholder="**********">
+            <input type="password" class="form-control" id="PasswordInput" placeholder="**********" name="password">
             <div class="invalid-feedback text-center">
                 Le mot de pass doit contenir 8 caractères minimuns, comprenant au moins 1 lettre, 1
                 majuscule, 1 miniscule, 1 chiffre et 1 cacaractère special
@@ -51,7 +51,8 @@
             </div>
             <div class="mb-3 mt-3">
 
-                <input type="password" class="form-control" id="ValidatePasswordInput" placeholder="**********">
+                <input type="password" class="form-control" id="ValidatePasswordInput" placeholder="**********"
+                    name="validatepassword">
                 <div class="invalid-feedback text-center">
                     Les mots de pass doivent être identiques !
                 </div>
