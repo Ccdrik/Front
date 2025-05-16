@@ -16,42 +16,34 @@ class Trajet
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $villeDepart = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $villeArrivee = null;
-
-    #[ORM\Column]
-    private ?int $nombrePlaces = null;
-
-    #[ORM\Column]
-    private ?float $prix = null;
-
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $description = null;
-
-    #[ORM\ManyToOne(inversedBy: 'trajets')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $chauffeur = null;
-
+    // Lieu ou ville de départ
     #[ORM\Column(length: 255)]
     private ?string $depart = null;
 
+    // Lieu ou ville d'arrivée / destination
     #[ORM\Column(length: 255)]
     private ?string $destination = null;
 
-    #[ORM\Column]
+    // Date et heure de départ
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTime $dateDepart = null;
 
-    #[ORM\Column]
-    private ?int $nbPlaces = null;
-
-    #[ORM\Column]
-    private ?\DateTime $date = null;
-
+    // Nombre total de places disponibles
     #[ORM\Column]
     private ?int $places = null;
+
+    // Prix du trajet
+    #[ORM\Column]
+    private ?float $prix = null;
+
+    // Description optionnelle
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    // Chauffeur (conducteur) lié au trajet
+    #[ORM\ManyToOne(inversedBy: 'trajets')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $chauffeur = null;
 
     /**
      * @var Collection<int, Reservation>
@@ -64,43 +56,57 @@ class Trajet
         $this->reservations = new ArrayCollection();
     }
 
+    // Getters et setters
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getVilleDepart(): ?string
+    public function getDepart(): ?string
     {
-        return $this->villeDepart;
+        return $this->depart;
     }
 
-    public function setVilleDepart(string $villeDepart): static
+    public function setDepart(string $depart): static
     {
-        $this->villeDepart = $villeDepart;
+        $this->depart = $depart;
 
         return $this;
     }
 
-    public function getVilleArrivee(): ?string
+    public function getDestination(): ?string
     {
-        return $this->villeArrivee;
+        return $this->destination;
     }
 
-    public function setVilleArrivee(string $villeArrivee): static
+    public function setDestination(string $destination): static
     {
-        $this->villeArrivee = $villeArrivee;
+        $this->destination = $destination;
 
         return $this;
     }
 
-    public function getNombrePlaces(): ?int
+    public function getDateDepart(): ?\DateTime
     {
-        return $this->nombrePlaces;
+        return $this->dateDepart;
     }
 
-    public function setNombrePlaces(int $nombrePlaces): static
+    public function setDateDepart(\DateTime $dateDepart): static
     {
-        $this->nombrePlaces = $nombrePlaces;
+        $this->dateDepart = $dateDepart;
+
+        return $this;
+    }
+
+    public function getPlaces(): ?int
+    {
+        return $this->places;
+    }
+
+    public function setPlaces(int $places): static
+    {
+        $this->places = $places;
 
         return $this;
     }
@@ -141,78 +147,6 @@ class Trajet
         return $this;
     }
 
-    public function getDepart(): ?string
-    {
-        return $this->depart;
-    }
-
-    public function setDepart(string $depart): static
-    {
-        $this->depart = $depart;
-
-        return $this;
-    }
-
-    public function getDestination(): ?string
-    {
-        return $this->destination;
-    }
-
-    public function setDestination(string $destination): static
-    {
-        $this->destination = $destination;
-
-        return $this;
-    }
-
-    public function getDateDepart(): ?\DateTime
-    {
-        return $this->dateDepart;
-    }
-
-    public function setDateDepart(\DateTime $dateDepart): static
-    {
-        $this->dateDepart = $dateDepart;
-
-        return $this;
-    }
-
-    public function getNbPlaces(): ?int
-    {
-        return $this->nbPlaces;
-    }
-
-    public function setNbPlaces(int $nbPlaces): static
-    {
-        $this->nbPlaces = $nbPlaces;
-
-        return $this;
-    }
-
-    public function getDate(): ?\DateTime
-    {
-        return $this->date;
-    }
-
-    public function setDate(\DateTime $date): static
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
-    public function getPlaces(): ?int
-    {
-        return $this->places;
-    }
-
-    public function setPlaces(int $places): static
-    {
-        $this->places = $places;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Reservation>
      */
@@ -234,7 +168,6 @@ class Trajet
     public function removeReservation(Reservation $reservation): static
     {
         if ($this->reservations->removeElement($reservation)) {
-            // set the owning side to null (unless already changed)
             if ($reservation->getTrajet() === $this) {
                 $reservation->setTrajet(null);
             }

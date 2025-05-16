@@ -15,16 +15,25 @@ class Reservation
     #[ORM\Column]
     private ?int $id = null;
 
+    // Nombre de places réservées
     #[ORM\Column]
     private ?int $nbPlaces = null;
 
+    // Utilisateur qui fait la réservation
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $passager = null;
 
+    // Trajet concerné par la réservation
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Trajet $trajet = null;
+
+    // Optionnel : date de réservation
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $dateReservation = null;
+
+    // --- Getters et setters ---
 
     public function getId(): ?int
     {
@@ -36,11 +45,10 @@ class Reservation
         return $this->nbPlaces;
     }
 
-    public function setNbPlaces(int $nbPlaces): static
+   public function setNbPlaces(int $nbPlaces): static
     {
-        $this->nbPlaces = $nbPlaces;
-
-        return $this;
+    $this->nbPlaces = $nbPlaces;
+    return $this;
     }
 
     public function getPassager(): ?User
@@ -63,6 +71,18 @@ class Reservation
     public function setTrajet(?Trajet $trajet): static
     {
         $this->trajet = $trajet;
+
+        return $this;
+    }
+
+    public function getDateReservation(): ?\DateTimeInterface
+    {
+        return $this->dateReservation;
+    }
+
+    public function setDateReservation(?\DateTimeInterface $dateReservation): static
+    {
+        $this->dateReservation = $dateReservation;
 
         return $this;
     }
