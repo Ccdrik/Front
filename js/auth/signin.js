@@ -42,6 +42,7 @@ export function initSigninPage() {
                     let mainRole = "utilisateur";
                     if (roles.includes("ROLE_ADMIN")) mainRole = "admin";
                     else if (roles.includes("ROLE_EMPLOYE")) mainRole = "employe";
+                    else if (roles.includes("ROLE_PASSAGER") && roles.includes("ROLE_CHAUFFEUR")) mainRole = "passager_chauffeur";
                     else if (roles.includes("ROLE_CHAUFFEUR")) mainRole = "chauffeur";
                     else if (roles.includes("ROLE_PASSAGER")) mainRole = "passager";
 
