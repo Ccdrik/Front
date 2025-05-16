@@ -15,21 +15,18 @@ class AuthController extends AbstractController
     #[Route('/api/signup', name: 'api_signup', methods: ['POST'])]
     public function signup(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $hasher): JsonResponse
     {
-        // Récupérer les données de la requête
         $data = json_decode($request->getContent(), true);
 
         if (!$data) {
             return new JsonResponse(['error' => 'Données manquantes ou format invalide'], 400);
         }
 
-        // Validation des données reçues
         $email = $data['email'] ?? null;
         $password = $data['motdepasse'] ?? null;
         $confirmation = $data['confirmationpassword'] ?? null;
         $nom = $data['nom'] ?? null;
         $prenom = $data['prenom'] ?? null;
 
-        // Validation des champs
         if (!$email || !$password || !$confirmation || !$nom || !$prenom) {
             return new JsonResponse(['error' => 'Champs manquants'], 400);
         }
@@ -38,16 +35,14 @@ class AuthController extends AbstractController
             return new JsonResponse(['error' => 'Les mots de passe ne correspondent pas'], 400);
         }
 
-        // Créer un nouvel utilisateur
         $user = new User();
         $user->setEmail($email);
         $user->setPassword($hasher->hashPassword($user, $password));
         $user->setNom($nom);
         $user->setPrenom($prenom);
-        $user->setRoles(['ROLE_PASSAGER']); // Rôle par défaut, à adapter selon l'input de l'utilisateur
+        $user->setRoles(['ROLE_PASSAGER']); // Rôle par défaut, à adapter si besoin
 
         try {
-            // Enregistrer l'utilisateur dans la base de données
             $em->persist($user);
             $em->flush();
             return new JsonResponse(['success' => 'Utilisateur créé'], 201);
@@ -56,19 +51,37 @@ class AuthController extends AbstractController
         }
     }
 
-#[Route('/api/check-email', name: 'api_check_email', methods: ['GET'])]
-public function checkEmail(Request $request, EntityManagerInterface $em): JsonResponse
-{
-    $email = $request->query->get('email');
+    #[Route('/api/check-email', name: 'api_check_email', methods: ['GET'])]
+    public function checkEmail(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $email = $request->query->get('email');
 
-    if (!$email) {
-        return new JsonResponse(['error' => 'Email manquant'], 400);
+        if (!$email) {
+            return new JsonResponse(['error' => 'Email manquant'], 400);
+        }
+
+        $user = $em->getRepository(User::class)->findOneBy(['email' => $email]);
+
+        return new JsonResponse([
+            'available' => $user === null
+        ]);
     }
 
-    $user = $em->getRepository(User::class)->findOneBy(['email' => $email]);
+    #[Route('/api/me', name: 'api_me', methods: ['GET'])]
+    public function me(): JsonResponse
+    {
+        $user = $this->getUser();
 
-    return new JsonResponse([
-        'available' => $user === null  // true si dispo, false si déjà utilisé
-    ]);
-}
+        if (!$user) {
+            return new JsonResponse(['error' => 'Non authentifié'], 401);
+        }
+
+        return new JsonResponse([
+            'id' => $user->getId(),
+            'email' => $user->getEmail(),
+            'roles' => $user->getRoles(),
+            'nom' => $user->getNom(),
+            'prenom' => $user->getPrenom(),
+        ]);
+    }
 }
