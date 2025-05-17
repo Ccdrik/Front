@@ -33,6 +33,9 @@ class User implements UserInterface
     #[ORM\Column(type:"string", length:15, nullable:true)]
     private ?string $phone = null;
 
+    #[ORM\Column(type: "string", length: 255)]
+private ?string $pseudo = null;
+
     // Relations
 
     #[ORM\OneToMany(mappedBy: "conducteur", targetEntity: Trajet::class, cascade:["persist", "remove"])]
