@@ -12051,7 +12051,8 @@ h2,
 
 .input-group,
 .form-control,
-.heure-input {
+.heure-input,
+.form-select {
   width: 50%;
   margin: 0 auto;
 }

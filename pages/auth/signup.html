@@ -1,87 +1,65 @@
 <div class="hero-scene text-center text-white">
-    <div class="hero-scene-content">
-
-    </div>
+    <div class="hero-scene-content"></div>
 </div>
-
-
-
 
 <div class="container">
     <div>
         <h1 class="text-center">Inscription</h1>
     </div>
-    <form id="formulaire-inscription">
-        <div class="mb-3">
+    <form id="formulaire-inscription" novalidate>
 
-            <input type="text" class="form-control" id="NomInput" placeholder="Votre nom" name="nom">
-            <div class="invalid-feedback text-center">
-                Le nom est requis !
-            </div>
-        </div>
         <div class="mb-3">
-
-            <input type="text" class="form-control" id="PrenomInput" placeholder="Votre prénom" name="prenom">
-            <div class="invalid-feedback text-center">
-                Le prénom est requis !
-            </div>
-        </div>
-        <div class="mb-3">
-
-            <input type="email" class="form-control" id="EmailInput" placeholder="test@mail.fr" name="email">
-            <div class="invalid-feedback text-center">
-                Le mail n'est pas valide !
-            </div>
+            <input type="text" class="form-control" id="NomInput" name="nom" placeholder="Nom" required>
+            <div class="invalid-feedback text-center">Le nom est requis !</div>
         </div>
 
+        <div class="mb-3">
+            <input type="text" class="form-control" id="PrenomInput" name="prenom" placeholder="Prénom" required>
+            <div class="invalid-feedback text-center">Le prénom est requis !</div>
+        </div>
 
+        <div class="mb-3">
+            <input type="text" class="form-control" id="PseudoInput" name="pseudo" placeholder="Nom d'utilisateur"
+                required>
+            <div class="invalid-feedback text-center">Le pseudo est requis ou déjà pris !</div>
+        </div>
 
+        <div class="mb-3">
+            <input type="email" class="form-control" id="EmailInput" name="email" placeholder="test@mail.fr" required>
+            <div class="invalid-feedback text-center">L'email est requis ou invalide !</div>
+        </div>
 
+        <div class="mb-3">
+            <input type="password" class="form-control" id="PasswordInput" name="motdepasse" placeholder="Mot de passe"
+                required>
+            <div class="invalid-feedback text-center">Mot de passe trop faible (8 caractères, majuscule, chiffre,
+                symbole) !</div>
+        </div>
 
+        <div class="mb-3">
+            <input type="password" class="form-control" id="ValidatePasswordInput" name="confirmationpassword"
+                placeholder="Confirmer le mot de passe" required>
+            <div class="invalid-feedback text-center">Les mots de passe ne correspondent pas !</div>
+        </div>
 
-        <div class="mb-3 mt-3">
+        <div class="mb-3">
+            <select class="form-select" id="RoleSelect" name="role" required>
+                <option value="" disabled selected>Choisissez votre rôle</option>
+                <option value="passager">Passager</option>
+                <option value="chauffeur">Chauffeur</option>
+                <option value="employe">Les Deux</option>
+            </select>
+        </div>
 
-            <input type="password" class="form-control" id="PasswordInput" placeholder="**********" name="password">
-            <div class="invalid-feedback text-center">
-                Le mot de pass doit contenir 8 caractères minimuns, comprenant au moins 1 lettre, 1
-                majuscule, 1 miniscule, 1 chiffre et 1 cacaractère special
-            </div>
-            <div class="valid-feedback text-center">
-                Le mot de pass est assez robuste !
-            </div>
-            <div class="mb-3 mt-3">
-
-                <input type="password" class="form-control" id="ValidatePasswordInput" placeholder="**********"
-                    name="validatepassword">
-                <div class="invalid-feedback text-center">
-                    Les mots de pass doivent être identiques !
-                </div>
-            </div>
-
-            <div class="checkbox-center mb-3">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1"
-                        value="option1" />
-                    <label class="form-check-label" for="inlineRadio1">Passager</label>
-                </div>
-
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2"
-                        value="option2" />
-                    <label class="form-check-label" for="inlineRadio2">Chauffeur</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3"
-                        value="option3" />
-                    <label class="form-check-label" for="inlineRadio3">Les Deux</label>
-                </div>
-            </div>
-
-            <div class="text-center">
-                <button type="button" class="btn btn-primary" id="btn-validation-inscription">Inscription</button>
-            </div>
+        <div class="text-center">
+            <button type="button" class="btn btn-primary" id="btn-validation-inscription">S'inscrire</button>
+        </div>
     </form>
+
     <div class="text-center pt-3">
-        <a href="/signin">Vous avez deja un compte ? Connectez vous ici ! </a>
+        <a href="/signin">Vous avez déjà un compte ? Connectez-vous ici !</a>
     </div>
 </div>
+
+<!-- Ton JS est censé être inclus à la fin du <body> -->
+<script type="module" src="/js/signup.js"></script>
