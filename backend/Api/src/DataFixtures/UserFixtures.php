@@ -12,19 +12,24 @@ class UserFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        // Création d'un utilisateur fictif
-        $user = new User();
-        $user->setPseudo("CedricDu63");
-        $user->setEmail("cedric@example.com");
-        $user->setPassword(password_hash("monpassword", PASSWORD_BCRYPT));
-        $user->setCredits(20);
+      $user1 = new User();
+        $user1->setNom('Dupont')
+              ->setPrenom('Jean')
+              ->setEmail('jean.dupont@example.com')
+              ->setPassword(password_hash('pass123', PASSWORD_BCRYPT));
+        $manager->persist($user1);
 
+        $user2 = new User();
+        $user2->setNom('Martin')
+              ->setPrenom('Claire')
+              ->setEmail('claire.martin@example.com')
+              ->setPassword(password_hash('pass456', PASSWORD_BCRYPT));
+        $manager->persist($user2);
 
-
-        // Enregistrement de l'utilisateur en base
-        $manager->persist($user);
-
-        // Exécute l'insertion dans la base
         $manager->flush();
-    }
+
+        // On peut sauvegarder les références pour les utiliser dans d'autres fixtures
+        $this->addReference('user1', $user1);
+        $this->addReference('user2', $user2);
+}
 }

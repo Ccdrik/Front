@@ -17,7 +17,7 @@ class AppFixtures extends Fixture
         $user = new User();
         $user->setEmail('john.doe@example.com');
         $user->setPseudo('JohnDoe');
-        $user->setPassword('pass'); // En production, pensez à hasher ce mot de passe
+        $user->setPassword('pass'); // En production, pensez à hasher ce mot de passe !
         $user->setCredits(20);
         $manager->persist($user);
 
@@ -36,6 +36,7 @@ class AppFixtures extends Fixture
         $reservation->setTrajet($trajet);
         $manager->persist($reservation);
 
+        // Enregistrer en base
         $manager->flush();
     }
 }

@@ -2,124 +2,46 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
-use App\Repository\VoitureRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-
-#[ORM\Entity(repositoryClass: VoitureRepository::class)]
+#[ORM\Entity(repositoryClass: "App\Repository\VoitureRepository")]
 class Voiture
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type:"integer")]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $marque = null;
+    #[ORM\Column(type:"string", length:100)]
+    private string $marque;
 
-    #[ORM\Column(length: 255)]
-    private ?string $modele = null;
+    #[ORM\Column(type:"string", length:100)]
+    private string $modele;
 
-    #[ORM\Column(length: 20)]
-    private ?string $immatriculation = null;
+    #[ORM\Column(type:"string", length:20)]
+    private string $immatriculation;
 
-    #[ORM\Column]
-    private ?bool $electrique = null;
+    #[ORM\Column(type:"integer")]
+    private int $places;
 
-    /**
-     * @var Collection<int, Covoiturage>
-     */
-    #[ORM\OneToMany(targetEntity: Covoiturage::class, mappedBy: 'vehiculeUtilise', orphanRemoval: true)]
-    private Collection $covoiturages;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "voitures")]
+    #[ORM\JoinColumn(nullable:false)]
+    private User $proprietaire;
 
-    public function __construct()
-    {
-        $this->covoiturages = new ArrayCollection();
-    }
+    public function getId(): ?int { return $this->id; }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    public function getMarque(): string { return $this->marque; }
+    public function setMarque(string $marque): self { $this->marque = $marque; return $this; }
 
-    public function getMarque(): ?string
-    {
-        return $this->marque;
-    }
+    public function getModele(): string { return $this->modele; }
+    public function setModele(string $modele): self { $this->modele = $modele; return $this; }
 
-    public function setMarque(string $marque): static
-    {
-        $this->marque = $marque;
+    public function getImmatriculation(): string { return $this->immatriculation; }
+    public function setImmatriculation(string $immatriculation): self { $this->immatriculation = $immatriculation; return $this; }
 
-        return $this;
-    }
+    public function getPlaces(): int { return $this->places; }
+    public function setPlaces(int $places): self { $this->places = $places; return $this; }
 
-    public function getModele(): ?string
-    {
-        return $this->modele;
-    }
-
-    public function setModele(string $modele): static
-    {
-        $this->modele = $modele;
-
-        return $this;
-    }
-
-    public function getImmatriculation(): ?string
-    {
-        return $this->immatriculation;
-    }
-
-    public function setImmatriculation(string $immatriculation): static
-    {
-        $this->immatriculation = $immatriculation;
-
-        return $this;
-    }
-
-    public function isElectrique(): ?bool
-    {
-        return $this->electrique;
-    }
-
-    public function setElectrique(bool $electrique): static
-    {
-        $this->electrique = $electrique;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Covoiturage>
-     */
-    public function getCovoiturages(): Collection
-    {
-        return $this->covoiturages;
-    }
-
-    public function addCovoiturage(Covoiturage $covoiturage): static
-    {
-        if (!$this->covoiturages->contains($covoiturage)) {
-            $this->covoiturages->add($covoiturage);
-            $covoiturage->setVehiculeUtilise($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCovoiturage(Covoiturage $covoiturage): static
-    {
-        if ($this->covoiturages->removeElement($covoiturage)) {
-            // set the owning side to null (unless already changed)
-            if ($covoiturage->getVehiculeUtilise() === $this) {
-                $covoiturage->setVehiculeUtilise(null);
-            }
-        }
-
-        return $this;
-    }
+    public function getProprietaire(): User { return $this->proprietaire; }
+    public function setProprietaire(User $proprietaire): self { $this->proprietaire = $proprietaire; return $this; }
 }

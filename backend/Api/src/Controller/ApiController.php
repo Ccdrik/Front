@@ -84,11 +84,7 @@ public function createReservation(Request $request): JsonResponse
         return new JsonResponse(['error' => 'Non authentifié'], 401);
     }
 
-    $content = $request->getContent();
-    error_log("Contenu brut reçu : " . $content);
-
-    $data = json_decode($content, true);
-    error_log("Données décodées : " . print_r($data, true));
+    $data = json_decode($request->getContent(), true);
 
     if (!$data || !isset($data['trajetId']) || !isset($data['placesReservees'])) {
         return new JsonResponse(['error' => 'Données manquantes ou invalides'], 400);
@@ -99,34 +95,14 @@ public function createReservation(Request $request): JsonResponse
         return new JsonResponse(['error' => 'Trajet introuvable'], 404);
     }
 
-    $placesDemandees = (int)$data['placesReservees'];
-    $placesDisponibles = $trajet->getPlaces();
+    $reservation = new Reservation();
+    $reservation->setUser($user);
+    $reservation->setTrajet($trajet);
+    $reservation->setPlacesReservees($data['placesReservees']);
 
-    if ($placesDemandees > $placesDisponibles) {
-        return new JsonResponse(['error' => 'Pas assez de places disponibles'], 400);
-    }
+    $this->em->persist($reservation);
+    $this->em->flush();
 
-    try {
-        $reservation = new Reservation();
-        $reservation->setPassager($user);
-        $reservation->setTrajet($trajet);
-        $reservation->setNbPlaces($placesDemandees);
-        $reservation->setDateReservation(new \DateTime());
-
-        $trajet->setPlaces($placesDisponibles - $placesDemandees);
-
-        $this->em->persist($reservation);
-        $this->em->flush();
-
-        return new JsonResponse([
-            'success' => 'Réservation créée',
-            'reservationId' => $reservation->getId()
-        ], 201);
-
-    } catch (\Exception $e) {
-        return new JsonResponse([
-            'error' => 'Erreur lors de la création de la réservation : ' . $e->getMessage()
-        ], 500);
-    }
+    return new JsonResponse(['success' => 'Réservation créée'], 201);
 }
 }
