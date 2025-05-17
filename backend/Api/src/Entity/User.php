@@ -6,9 +6,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: "App\Repository\UserRepository")]
-class User implements UserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -25,18 +26,19 @@ class User implements UserInterface
     private string $password;
 
     #[ORM\Column(type:"string", length:50)]
-    private string $firstname;
+    private string $prenom;
 
     #[ORM\Column(type:"string", length:50)]
-    private string $lastname;
+    private string $nom;
 
     #[ORM\Column(type:"string", length:15, nullable:true)]
-    private ?string $phone = null;
+    private ?string $telephone = null;
 
-    #[ORM\Column(type: "string", length: 255)]
-private ?string $pseudo = null;
+    #[ORM\Column(type: "string", length: 255, nullable:true)]
+    private ?string $pseudo = null;
 
-    // Relations
+    #[ORM\Column(type:"integer")]
+    private int $credits = 20;
 
     #[ORM\OneToMany(mappedBy: "conducteur", targetEntity: Trajet::class, cascade:["persist", "remove"])]
     private Collection $trajets;
@@ -66,9 +68,10 @@ private ?string $pseudo = null;
         $this->preferences = new ArrayCollection();
     }
 
-    // Getters & setters + UserInterface methods (getUserIdentifier, getRoles, getPassword, eraseCredentials)
+    // Getters & setters + UserInterface methods
 
     public function getId(): ?int { return $this->id; }
+
     public function getEmail(): string { return $this->email; }
     public function setEmail(string $email): self { $this->email = $email; return $this; }
 
@@ -77,24 +80,33 @@ private ?string $pseudo = null;
     public function getRoles(): array
     {
         $roles = $this->roles;
-        if (!in_array('ROLE_USER', $roles)) $roles[] = 'ROLE_USER';
+        if (!in_array('ROLE_USER', $roles)) {
+            $roles[] = 'ROLE_USER';
+        }
         return array_unique($roles);
     }
     public function setRoles(array $roles): self { $this->roles = $roles; return $this; }
 
+    // Méthode requise par PasswordAuthenticatedUserInterface
     public function getPassword(): string { return $this->password; }
     public function setPassword(string $password): self { $this->password = $password; return $this; }
 
     public function eraseCredentials(): void {}
 
-    public function getFirstname(): string { return $this->firstname; }
-    public function setFirstname(string $firstname): self { $this->firstname = $firstname; return $this; }
+    public function getPrenom(): string { return $this->prenom; }
+    public function setPrenom(string $prenom): self { $this->prenom = $prenom; return $this; }
 
-    public function getLastname(): string { return $this->lastname; }
-    public function setLastname(string $lastname): self { $this->lastname = $lastname; return $this; }
+    public function getNom(): string { return $this->nom; }
+    public function setNom(string $nom): self { $this->nom = $nom; return $this; }
 
-    public function getPhone(): ?string { return $this->phone; }
-    public function setPhone(?string $phone): self { $this->phone = $phone; return $this; }
+    public function getTelephone(): ?string { return $this->telephone; }
+    public function setTelephone(?string $telephone): self { $this->telephone = $telephone; return $this; }
+
+    public function getPseudo(): ?string { return $this->pseudo; }
+    public function setPseudo(?string $pseudo): self { $this->pseudo = $pseudo; return $this; }
+
+    public function getCredits(): int { return $this->credits; }
+    public function setCredits(int $credits): self { $this->credits = $credits; return $this; }
 
     // Relations getters/setters
 
