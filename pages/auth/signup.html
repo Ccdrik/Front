@@ -1,0 +1,65 @@
+<div class="hero-scene text-center text-white">
+    <div class="hero-scene-content"></div>
+</div>
+
+<div class="container">
+    <div>
+        <h1 class="text-center">Inscription</h1>
+    </div>
+    <form id="formulaire-inscription" novalidate>
+
+        <div class="mb-3">
+            <input type="text" class="form-control" id="NomInput" name="nom" placeholder="Nom" required>
+            <div class="invalid-feedback text-center">Le nom est requis !</div>
+        </div>
+
+        <div class="mb-3">
+            <input type="text" class="form-control" id="PrenomInput" name="prenom" placeholder="Prénom" required>
+            <div class="invalid-feedback text-center">Le prénom est requis !</div>
+        </div>
+
+        <div class="mb-3">
+            <input type="text" class="form-control" id="PseudoInput" name="pseudo" placeholder="Nom d'utilisateur"
+                required>
+            <div class="invalid-feedback text-center">Le pseudo est requis ou déjà pris !</div>
+        </div>
+
+        <div class="mb-3">
+            <input type="email" class="form-control" id="EmailInput" name="email" placeholder="test@mail.fr" required>
+            <div class="invalid-feedback text-center">L'email est requis ou invalide !</div>
+        </div>
+
+        <div class="mb-3">
+            <input type="password" class="form-control" id="PasswordInput" name="motdepasse" placeholder="Mot de passe"
+                required>
+            <div class="invalid-feedback text-center">Mot de passe trop faible (8 caractères, majuscule, chiffre,
+                symbole) !</div>
+        </div>
+
+        <div class="mb-3">
+            <input type="password" class="form-control" id="ValidatePasswordInput" name="confirmationpassword"
+                placeholder="Confirmer le mot de passe" required>
+            <div class="invalid-feedback text-center">Les mots de passe ne correspondent pas !</div>
+        </div>
+
+        <div class="mb-3">
+            <select class="form-select" id="RoleSelect" name="role" required>
+                <option value="" disabled selected>Choisissez votre rôle</option>
+                <option value="passager">Passager</option>
+                <option value="chauffeur">Chauffeur</option>
+                <option value="passager,chauffeur">Les Deux</option>
+            </select>
+        </div>
+
+        <div class="text-center">
+            <button type="button" class="btn btn-primary" id="btn-validation-inscription">S'inscrire</button>
+        </div>
+    </form>
+
+    <div class="text-center pt-3">
+        <a href="/signin">Vous avez déjà un compte ? Connectez-vous ici !</a>
+    </div>
+</div>
+
+<!-- Ton JS est censé être inclus à la fin du <body> -->
+<script type="module" src="/js/signup.js"></script>
