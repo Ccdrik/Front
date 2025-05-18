@@ -1,4 +1,3 @@
-// js/creer-trajet.js
 
 const departInput = document.getElementById("depart");
 const destinationInput = document.getElementById("destination");
