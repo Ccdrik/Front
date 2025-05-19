@@ -1,5 +1,5 @@
 
-import { setCookie, RoleCookieName } from "./auth.js";
+import { setCookie, RoleCookieName } from "./auth/auth.js";
 
 
 if (document.getElementById("signup-form")) {

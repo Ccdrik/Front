@@ -10,7 +10,7 @@ import {
 document.addEventListener('DOMContentLoaded', () => {
     showAndHideElementsForRoles();
 
-    // Ton fetch existant pour afficher les trajets
+    // Fetch des trajets avec token dans header
     fetch('http://127.0.0.1:8000/api/trajets', {
         headers: {
             "Content-Type": "application/json",
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-    // Initialisation des autocomplétions
+    // Initialisation autocomplétions départ et arrivée
     setupAutocomplete("depart", "depart-suggestions");
     setupAutocomplete("arrivee", "arrivee-suggestions");
 });

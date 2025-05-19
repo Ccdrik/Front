@@ -1,5 +1,6 @@
+
 export const tokenCookieName = "accesstoken";
-export const RoleCookieName = "role";
+export const roleCookieName = "role";
 
 // Gestion des cookies
 export function setCookie(name, value, days = 7) {
@@ -31,11 +32,11 @@ export function isConnected() {
 
 // Gestion du rôle
 export function setRole(role) {
-    setCookie(RoleCookieName, role);
+    setCookie(roleCookieName, role);
 }
 
 export function getRole() {
-    return getCookie(RoleCookieName);
+    return getCookie(roleCookieName);
 }
 
 // Affichage conditionnel en fonction du rôle
