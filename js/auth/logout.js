@@ -1,4 +1,4 @@
-import { tokenCookieName, roleCookieName } from './auth/auth.js';
+import { tokenCookieName, roleCookieName } from './auth.js';
 
 if (document.getElementById("signout-btn")) {
 

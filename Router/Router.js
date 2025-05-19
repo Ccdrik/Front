@@ -1,9 +1,9 @@
 // Router.js
 import Route from "./Route.js";
 import { allRoutes, websiteName } from "./allRoutes.js";
-import { isConnected, getRole, showAndHideElementsForRoles } from "../js/auth/auth.js";
+import { isConnected, getRole, showAndHideElementsForRoles } from "/js/auth/auth.js";
 
-// Vérification de l'import de la fonction isConnected
+console.log("Rôle utilisateur :", getRole());
 console.log("isConnected:", isConnected);
 
 const route404 = new Route("404", "Page introuvable", "/pages/404.html", []);

@@ -52,6 +52,7 @@ class AuthController extends AbstractController
         $user->setNom($nom);
         $user->setPrenom($prenom);
         $user->setPseudo($pseudo);
+        $user->setCredit(20);
 
         // Gestion dynamique des rôles
         $availableRoles = ['ROLE_PASSAGER', 'ROLE_CHAUFFEUR'];
