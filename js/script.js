@@ -1,42 +1,54 @@
+// script.js — accueil / recherche trajets avec gestion des erreurs token
 import {
     isConnected,
     getRole,
     showAndHideElementsForRoles,
     tokenCookieName,
     roleCookieName,
-    getToken
+    getToken,
+    handle401
 } from "./auth/auth.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     showAndHideElementsForRoles();
 
-    // Détection de l'environnement (Symfony ou VS Code)
     const API_BASE_URL = window.location.origin.includes('5500')
         ? 'http://127.0.0.1:8000/api'
-        : 'http://127.0.0.1:8000/api'; // Modifiable si besoin
+        : 'http://127.0.0.1:8000/api';
 
     console.log("URL utilisée pour fetch:", API_BASE_URL);
 
-    // Fetch des trajets avec token dans header
     fetch(`${API_BASE_URL}/trajets`, {
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${getToken()}`
         }
     })
-        .then(response => {
+        .then(async response => {
             console.log("Statut de la réponse:", response.status);
-            if (!response.ok) throw new Error(`Erreur HTTP ${response.status}`);
-            return response.json();
+            if (handle401(response)) return;
+
+            const text = await response.text();
+            try {
+                const json = JSON.parse(text);
+                return json;
+            } catch (e) {
+                console.error("❌ JSON.parse a échoué :", e);
+                console.warn("Contenu brut de la réponse :", text);
+                throw new Error("Réponse invalide reçue du serveur");
+            }
         })
         .then(data => {
-            console.log("Données reçues:", data);
+            if (!data) return;
+            console.log("✅ Données reçues:", data);
+
+            const trajets = data["hydra:member"] || data;
             const container = document.getElementById('trajets');
             if (!container) return;
 
-            data.forEach(trajet => {
+            trajets.forEach(trajet => {
                 const li = document.createElement('li');
-                li.textContent = `Départ : ${trajet.depart} → Arrivée : ${trajet.destination}`;
+                li.textContent = `Départ : ${trajet.villeDepart} → Arrivée : ${trajet.villeArrivee}`;
                 container.appendChild(li);
             });
         })
@@ -48,7 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-    // Initialisation autocomplétions départ et arrivée
     setupAutocomplete("depart", "depart-suggestions");
     setupAutocomplete("arrivee", "arrivee-suggestions");
 });
@@ -62,13 +73,13 @@ function setupAutocomplete(inputId, datalistId) {
     input.addEventListener("input", async () => {
         const query = input.value.trim();
         if (query.length < 3) {
-            datalist.innerHTML = ""; // Pas de suggestions si trop court
+            datalist.innerHTML = "";
             return;
         }
         try {
             const response = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`);
             const data = await response.json();
-            datalist.innerHTML = ""; // Vider anciennes suggestions
+            datalist.innerHTML = "";
             data.features.forEach(feature => {
                 const option = document.createElement("option");
                 option.value = feature.properties.label;
