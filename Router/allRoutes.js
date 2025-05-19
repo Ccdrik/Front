@@ -17,7 +17,8 @@ export const allRoutes = [
     new Route("/ajouter-vehicule", "Ajouter un véhicule", "pages/ajouter-vehicule.html", ["chauffeur"]),
     new Route("/mestrajets", "Mes trajets", "pages//mestrajets.html", ["chauffeur", "passager"], "/js/mes-trajets.js"),
     new Route("/mesreservations", "Mes réservations", "pages/mesreservations.html", ["passager"], "/js/creer-reservations.js"),
-    new Route("/administrateur", "Espace Administrateur", "pages//administrateur.html", ["admin"]),
+    new Route("/dashboard", "Dashboard Admin", "pages/admin_dashboard.html", ["admin"], "/js/admin_dashboard.js"),
+
     new Route("/employe", "Espace Employés", "pages//employe.html", ["employe"]),
     new Route("/reservations", "Reservations", "pages/reservations.html", []),
 ];

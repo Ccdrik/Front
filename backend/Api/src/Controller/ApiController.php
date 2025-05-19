@@ -78,7 +78,7 @@ class ApiController extends AbstractController
         }
     }
 
-    #[Route('/api/reservations', name: 'api_reservations_create', methods: ['POST'])]
+   #[Route('/api/reservations', name: 'api_reservations_create', methods: ['POST'])]
 public function createReservation(Request $request): JsonResponse
 {
     $user = $this->getUser();
@@ -97,19 +97,27 @@ public function createReservation(Request $request): JsonResponse
         return new JsonResponse(['error' => 'Trajet introuvable'], 404);
     }
 
-    if ($trajet->getNbPlaces() < $data['placesReservees']) {
+    $placesDemandées = (int)$data['placesReservees'];
+    $prixUnitaire = $trajet->getPrix();
+    $fraisPlateforme = 2;
+    $prixTotal = ($prixUnitaire + $fraisPlateforme) * $placesDemandées;
+
+    if ($trajet->getNbPlaces() < $placesDemandées) {
         return new JsonResponse(['error' => 'Pas assez de places disponibles'], 400);
     }
 
+    if ($user->getCredits() < $prixTotal) {
+        return new JsonResponse(['error' => 'Crédits insuffisants'], 400);
+    }
+
     $reservation = new Reservation();
-    // Correction ici : setPassager au lieu de setUser
     $reservation->setPassager($user);
     $reservation->setTrajet($trajet);
-    // Correction ici : setNbPlacesReservees au lieu de setPlacesReservees
-    $reservation->setNbPlacesReservees($data['placesReservees']);
+    $reservation->setNbPlacesReservees($placesDemandées);
 
-    // Mise à jour du nombre de places restantes
-    $trajet->setNbPlaces($trajet->getNbPlaces() - $data['placesReservees']);
+    // Mise à jour :
+    $trajet->setNbPlaces($trajet->getNbPlaces() - $placesDemandées);
+    $user->setCredits($user->getCredits() - $prixTotal);
 
     $this->em->persist($reservation);
     $this->em->flush();

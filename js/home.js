@@ -1,53 +1,55 @@
-document.getElementById('form-recherche').addEventListener('submit', function (event) {
-    event.preventDefault(); // empêche le rechargement de page
+// js/home.js
+import { getToken } from './auth/auth.js';
 
-    const depart = document.getElementById('depart').value.trim();
-    const arrivee = document.getElementById('arrivee').value.trim();
-    const date = document.getElementById('date').value;
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('form');
+    const resultats = document.getElementById('resultats-trajets');
 
-    if (!depart || !arrivee || !date) {
-        alert('Veuillez remplir tous les champs.');
-        return;
-    }
+    if (!form || !resultats) return;
 
-    // Exemple d'URL API, à adapter selon ton backend
-    const url = `/api/trajets?depart=${encodeURIComponent(depart)}&arrivee=${encodeURIComponent(arrivee)}&date=${encodeURIComponent(date)}`;
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        resultats.innerHTML = '<p>🔄 Recherche en cours...</p>';
 
-    fetch(url)
-        .then(response => {
-            if (!response.ok) throw new Error('Erreur API');
-            return response.json();
-        })
-        .then(data => {
-            afficherResultats(data);
-        })
-        .catch(err => {
-            console.error(err);
-            document.getElementById('resultats-trajets').innerHTML = '<p class="text-danger">Erreur lors de la recherche.</p>';
-        });
-});
+        const depart = document.getElementById('depart').value;
+        const arrivee = document.getElementById('arrivee').value;
+        const date = document.getElementById('date').value;
 
-function afficherResultats(trajets) {
-    const container = document.getElementById('resultats-trajets');
-    if (trajets.length === 0) {
-        container.innerHTML = '<p>Aucun trajet disponible pour ces critères.</p>';
-        return;
-    }
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/api/trajets?depart=${depart}&destination=${arrivee}&date=${date}`, {
+                headers: {
+                    Authorization: `Bearer ${getToken()}`
+                }
+            });
 
-    let html = '<h3>Résultats disponibles</h3><div class="list-group">';
-    trajets.forEach(trajet => {
-        html += `
-      <div class="list-group-item">
-        <h5>${trajet.depart} → ${trajet.arrivee} - ${trajet.date}</h5>
-        <p>Places restantes : ${trajet.placesRestantes}</p>
-        <p>Prix : ${trajet.prix} €</p>
-        <p>Durée estimée : ${trajet.duree}</p>
-        <p>Note : ${trajet.note}</p>
-        <button class="btn btn-success btn-sm">Réserver</button>
-      </div>
-    `;
+            if (!response.ok) throw new Error('Erreur lors du fetch');
+
+            const trajets = await response.json();
+
+            if (!Array.isArray(trajets) || trajets.length === 0) {
+                resultats.innerHTML = `<div class="alert alert-warning">Aucun trajet trouvé pour ces critères.</div>`;
+                return;
+            }
+
+            resultats.innerHTML = trajets.map(trajet => `
+                <div class="card my-3">
+                    <div class="card-body">
+                        <h5 class="card-title">${trajet.chauffeur?.pseudo || 'Chauffeur inconnu'}</h5>
+                        <p class="card-text">
+                            🚗 Départ : <strong>${trajet.depart}</strong><br>
+                            🏁 Arrivée : <strong>${trajet.destination}</strong><br>
+                            📅 Date : ${trajet.dateDepart} à ${trajet.heureDepart}<br>
+                            👥 Places restantes : ${trajet.placesDisponibles}<br>
+                            💰 Prix : ${trajet.prix} crédits
+                        </p>
+                        <a href="#/trajet/${trajet.id}" class="btn btn-outline-success">Voir les détails</a>
+                    </div>
+                </div>
+            `).join('');
+
+        } catch (error) {
+            console.error('Erreur lors de la recherche :', error);
+            resultats.innerHTML = `<div class="alert alert-danger">Erreur lors de la recherche. Veuillez réessayer plus tard.</div>`;
+        }
     });
-    html += '</div>';
-
-    container.innerHTML = html;
-}
+});

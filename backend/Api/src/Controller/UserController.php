@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,6 +21,7 @@ class UserController extends AbstractController
                 'id' => $user->getId(),
                 'pseudo' => $user->getPseudo(),
                 'email' => $user->getEmail(),
+                'credits' => $user->getCredits(),
                 // ... autres informations que tu souhaites exposer
             ];
         }
@@ -53,5 +55,19 @@ class UserController extends AbstractController
         $user = $userRepository->findOneBy(['pseudo' => $pseudo]);
 
         return new JsonResponse(['available' => !$user]);
+    }
+
+    #[Route('/api/users/{id}/suspend', name: 'api_user_suspend', methods: ['PUT'])]
+    public function suspendUser(UserRepository $userRepository, EntityManagerInterface $em, int $id): JsonResponse
+    {
+        $user = $userRepository->find($id);
+        if (!$user) {
+            return new JsonResponse(['error' => 'Utilisateur introuvable'], 404);
+        }
+
+        $user->setActif(false); // Nécessite un champ actif dans l'entité User
+        $em->flush();
+
+        return new JsonResponse(['success' => 'Utilisateur suspendu']);
     }
 }
