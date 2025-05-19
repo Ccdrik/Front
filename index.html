@@ -44,7 +44,7 @@
                             <a class="nav-link" href="/mestrajets">Mes trajets</a>
                         </li>
                         <li class="nav-item" data-show="chauffeur">
-                            <a class="nav-link" href="/ajouter-vehicule">Ajouter un véhicule</a>
+                            <a class="nav-link" href="/vehicule">Ajouter un véhicule</a>
                         </li>
 
                         <li class="nav-item" data-show="connected">
@@ -53,17 +53,14 @@
                         <li class="nav-item" data-show="admin">
                             <a class="nav-link" href="/dashboard">Dashboard</a>
                         </li>
-                        <li class="nav-item" data-show="connected">
-                            <button class="nav-link" href="/reservations">Reservations</button>
+                        <li class="nav-item" data-show="passager">
+                            <a class="nav-link" href="/reservations">Reservations</a>
                         </li>
                         <li class="nav-item" data-show="disconnected">
                             <a class="nav-link" href="/signin">Connexion</a>
                         </li>
-                        <li class="nav-item" data-show="connected" style="display:none;">
-                            <button id="signout-btn" class="nav-link btn btn-link"
-                                style="border:none; padding:0; cursor:pointer;">
-                                Déconnexion
-                            </button>
+                        <li class="nav-item" data-show="connected">
+                            <button class="nav-link" id="signout-btn">Déconnexion</button>
                         </li>
                     </ul>
         </nav>
@@ -85,8 +82,8 @@
 
 
 
-    <script src="Router/Router.js" type="module"></script>
-    <script type="module" src="/js/auth/signin.js"></script>
+    <script type="module" src="Router/Router.js"></script>
+
 
     <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 

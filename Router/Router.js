@@ -42,7 +42,7 @@ const LoadContentPage = async () => {
         // Chargement dynamique du module JavaScript associé
         if (actualRoute.pathJS) {
             try {
-                const module = await import(actualRoute.pathJS);
+                const module = await import(actualRoute.pathJS) // Correction ici
                 if (module && typeof module.default === "function") {
                     module.default();
                 } else if (module.initSignupPage) {
@@ -56,10 +56,10 @@ const LoadContentPage = async () => {
         } else {
             // En l'absence de module défini dans la route, on vérifie la route globale pour l'inscription ou la connexion
             if (path === "/signup") {
-                const module = await import('../js/auth/signup.js');
+                const module = await import("./js/auth/signup.js");
                 module.initSignupPage();
             } else if (path === "/signin") {
-                const module = await import('../js/auth/signin.js');
+                const module = await import("./js/auth/signin.js");
                 module.initSigninPage();
             }
         }
@@ -85,15 +85,11 @@ document.body.addEventListener('click', (event) => {
     }
 });
 
-
-
-
 const routeEvent = (event) => {
     event.preventDefault();
     window.history.pushState({}, "", event.target.href);
     LoadContentPage();
 };
-
 
 window.onpopstate = LoadContentPage;
 window.route = routeEvent;

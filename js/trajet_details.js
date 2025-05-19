@@ -2,7 +2,7 @@
 import { getToken } from './auth/auth.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const container = document.querySelector('main.container'); // ciblage plus précis
+    const container = document.querySelector('#trajet-details-container');
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
 

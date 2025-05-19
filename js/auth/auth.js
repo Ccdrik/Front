@@ -45,23 +45,37 @@ export function getRole() {
 export function showAndHideElementsForRoles() {
     const connected = isConnected();
     const role = getRole();
+    console.log("Rôle utilisateur :", role);
+    console.log("isConnected:", isConnected);
+
     document.querySelectorAll('[data-show]').forEach(el => {
         const showCondition = el.dataset.show;
         const shouldHide =
             (showCondition === 'disconnected' && connected) ||
             (showCondition === 'connected' && !connected) ||
-            (['passager', 'chauffeur', 'admin', 'employe'].includes(showCondition) && (!connected || role !== showCondition));
+            (["passager", "chauffeur", "admin", "employe"].includes(showCondition) && (!connected || role !== showCondition));
         el.classList.toggle("d-none", shouldHide);
     });
-    // Le contenu des rôles est maintenant chargé depuis les pages, plus automatiquement ici
 }
 
 export function handle401(response) {
     if (response.status === 401) {
         console.warn("Token expiré ou invalide, suppression des cookies et redirection.");
         clearAuthCookies();
-
+        window.location.href = "/signin";
         return true;
     }
     return false;
 }
+
+// Gestion du bouton de déconnexion
+document.addEventListener("DOMContentLoaded", () => {
+    const logoutBtn = document.getElementById("signout-btn");
+    if (!logoutBtn) return;
+
+    logoutBtn.addEventListener("click", () => {
+        clearAuthCookies();
+        alert("Déconnexion réussie !");
+        window.location.href = "/signin"; // Redirection vers la page de connexion
+    });
+});

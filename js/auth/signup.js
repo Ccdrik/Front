@@ -1,5 +1,5 @@
 // js/auth/signup.js
-import { setToken, setRole } from "/js/auth/auth.js";
+import { setToken, setRole } from "./auth.js";
 
 export function initSignupPage() {
     const inputNom = document.getElementById("NomInput");
@@ -10,11 +10,18 @@ export function initSignupPage() {
     const inputValidationPassword = document.getElementById("ValidatePasswordInput");
     const selectRole = document.getElementById("RoleSelect");
     const btnValidation = document.getElementById("btn-validation-inscription");
+    const messageDiv = document.getElementById("signup-message");
 
-    if (!inputNom || !inputPrenom || !inputMail || !inputPassword || !inputValidationPassword || !btnValidation || !inputPseudo || !selectRole) {
-        console.error("Éléments du formulaire introuvables");
+    if (!inputNom || !inputPrenom || !inputMail || !inputPassword || !inputValidationPassword || !btnValidation || !inputPseudo || !selectRole || !messageDiv) {
+        console.error("❌ Éléments du formulaire manquants");
         return;
     }
+
+    const showMessage = (text, type = "danger") => {
+        messageDiv.className = `alert alert-${type} text-center`;
+        messageDiv.textContent = text;
+        messageDiv.classList.remove("d-none");
+    };
 
     async function validateForm() {
         const nomOk = inputNom.value.trim() !== '';
@@ -58,7 +65,7 @@ export function initSignupPage() {
         await validateForm();
 
         if (btnValidation.disabled) {
-            alert("Veuillez corriger les erreurs avant de soumettre.");
+            showMessage("Veuillez corriger les erreurs avant de soumettre.");
             return;
         }
 
@@ -67,7 +74,7 @@ export function initSignupPage() {
         if (selectedRoleValue === "passager") roles = ["ROLE_PASSAGER"];
         else if (selectedRoleValue === "chauffeur") roles = ["ROLE_CHAUFFEUR"];
         else if (selectedRoleValue === "passager,chauffeur") roles = ["ROLE_PASSAGER", "ROLE_CHAUFFEUR"];
-        else return alert("Veuillez sélectionner un rôle valide.");
+        else return showMessage("Veuillez sélectionner un rôle valide.");
 
         const payload = {
             nom: inputNom.value.trim(),
@@ -96,14 +103,17 @@ export function initSignupPage() {
                 else if (roles.includes("ROLE_PASSAGER")) roleLabel = "passager";
 
                 setRole(roleLabel);
-                alert("Inscription réussie !");
-                window.location.href = "/";
+                showMessage("Inscription réussie ! Redirection...", "success");
+
+                setTimeout(() => {
+                    window.location.href = "/";
+                }, 1500);
             } else {
-                alert(result.error || "Erreur lors de l'inscription");
+                showMessage(result.error || "Erreur lors de l'inscription");
             }
         } catch (e) {
             console.error("Erreur inscription :", e);
-            alert("Erreur serveur, merci de réessayer plus tard.");
+            showMessage("Erreur serveur, merci de réessayer plus tard.");
         }
     });
 
