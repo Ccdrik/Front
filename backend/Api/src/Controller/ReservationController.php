@@ -35,38 +35,64 @@ class ReservationController extends AbstractController
         );
     }
 
-    #[Route('/create', name: 'reservation_create', methods: ['POST'])]
-    public function create(Request $request, EntityManagerInterface $em, TrajetRepository $trajetRepository): JsonResponse
-    {
-        $data = json_decode($request->getContent(), true);
+   #[Route('/create', name: 'reservation_create', methods: ['POST'])]
+public function create(Request $request, EntityManagerInterface $em, TrajetRepository $trajetRepository, ReservationRepository $reservationRepository): JsonResponse
+{
+    $data = json_decode($request->getContent(), true);
 
-        // Création d'une réservation
-        $reservation = new \App\Entity\Reservation();
-        if (isset($data['places'])) {
-            $reservation->setPlaces($data['places']);
-        }
-
-        // Récupération et affectation du trajet
-        if (isset($data['trajet_id'])) {
-            $trajet = $trajetRepository->find($data['trajet_id']);
-            if (!$trajet) {
-                return $this->json(['error' => 'Trajet non trouvé'], JsonResponse::HTTP_NOT_FOUND);
-            }
-            $reservation->setTrajet($trajet);
-        } else {
-            return $this->json(['error' => 'trajet_id est requis'], JsonResponse::HTTP_BAD_REQUEST);
-        }
-
-        // IMPORTANT : Récupérer l'utilisateur connecté et l'affecter à la réservation
-        $user = $this->getUser();
-        if (!$user) {
-            return $this->json(['error' => 'User non authentifié'], JsonResponse::HTTP_UNAUTHORIZED);
-        }
-        $reservation->setUser($user);
-
-        $em->persist($reservation);
-        $em->flush();
-
-        return $this->json(['status' => 'Réservation créée'], JsonResponse::HTTP_CREATED);
+    // Récupérer le trajet demandé
+    if (!isset($data['trajet_id'])) {
+        return $this->json(['message' => 'trajet_id est requis'], JsonResponse::HTTP_BAD_REQUEST);
     }
+
+    $trajet = $trajetRepository->find($data['trajet_id']);
+    if (!$trajet) {
+        return $this->json(['message' => 'Trajet non trouvé'], JsonResponse::HTTP_NOT_FOUND);
+    }
+
+    // Récupérer l'utilisateur connecté
+    $user = $this->getUser();
+    if (!$user) {
+        return $this->json(['message' => 'Utilisateur non authentifié'], JsonResponse::HTTP_UNAUTHORIZED);
+    }
+
+    // 🔁 Vérifier si une réservation existe déjà pour ce trajet et cet utilisateur
+    $reservationExistante = $reservationRepository->findOneBy([
+        'user' => $user,
+        'trajet' => $trajet
+    ]);
+
+    if ($reservationExistante) {
+        return $this->json(['message' => 'Déjà réservé'], JsonResponse::HTTP_BAD_REQUEST);
+    }
+
+    // 📉 Vérifier s’il reste des places disponibles
+    $placesTotal = $trajet->getPlaces(); // Places disponibles initiales
+    $reservations = $trajet->getReservations(); // Toutes les réservations liées
+    $placesReservées = array_reduce($reservations->toArray(), fn($carry, $r) => $carry + $r->getPlaces(), 0);
+
+    $placesRestantes = $placesTotal - $placesReservées;
+
+    if ($placesRestantes <= 0) {
+        return $this->json(['message' => 'Trajet complet'], JsonResponse::HTTP_BAD_REQUEST);
+    }
+
+    // 🔧 Créer la réservation
+    $reservation = new \App\Entity\Reservation();
+    $reservation->setUser($user);
+    $reservation->setTrajet($trajet);
+
+    // Par défaut : 1 place réservée
+    $nbPlaces = isset($data['places']) ? (int)$data['places'] : 1;
+    if ($nbPlaces > $placesRestantes) {
+        return $this->json(['message' => 'Pas assez de places disponibles'], JsonResponse::HTTP_BAD_REQUEST);
+    }
+
+    $reservation->setPlaces($nbPlaces);
+
+    $em->persist($reservation);
+    $em->flush();
+
+    return $this->json(['message' => 'Réservation créée'], JsonResponse::HTTP_CREATED);
+}
 }

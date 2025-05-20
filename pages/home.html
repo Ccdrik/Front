@@ -11,41 +11,28 @@
 
 
 <section class="mb-3">
-    <form action="#" method="GET" class="table-center">
-        <div class="table-style">
-            <div class="mt-3">
-
-                <h2 class="text-center mb-3">Rechercher un trajet</h2>
-            </div>
-
-            <div class="input-group mb-3">
-                <span class="input-group-text"><i class="bi bi-geo-alt-fill"></i></span>
-                <input class="form-control" type="text" id="depart" name="depart" list="depart-suggestions"
-                    autocomplete="off" required placeholder="Départ">
+    <form class="mb-4">
+        <div class="row">
+            <div class="col-md-4">
+                <input type="text" id="depart" list="depart-suggestions" class="form-control"
+                    placeholder="Ville de départ" required>
                 <datalist id="depart-suggestions"></datalist>
             </div>
-
-
-            <div class="input-group mb-3">
-                <span class="input-group-text"><i class="bi bi-geo-alt-fill"></i></span>
-                <input class="form-control" type="text" id="arrivee" name="arrivee" list="arrivee-suggestions"
-                    autocomplete="off" required placeholder="Arrivée">
+            <div class="col-md-4">
+                <input type="text" id="arrivee" list="arrivee-suggestions" class="form-control"
+                    placeholder="Ville d'arrivée" required>
                 <datalist id="arrivee-suggestions"></datalist>
             </div>
-
-
-
-            <div class="mb-3">
-                <input class="form-control date " type="date" id="date" name="date" required placeholder="Date">
+            <div class="col-md-3">
+                <input type="date" id="date" class="form-control" required>
             </div>
-
-            <button type="submit" class="btn btn-primary">Rechercher</button>
-        </div>
-
-        <div id="resultats-trajets" class="mt-4">
-            <!-- Les résultats de recherche apparaîtront ici -->
+            <div class="col-md-1">
+                <button type="submit" class="btn btn-success w-100">🔍</button>
+            </div>
         </div>
     </form>
+
+    <div id="resultats-trajets"></div>
 </section>
 <section>
     <div class="presentation text-center">

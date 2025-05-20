@@ -69,3 +69,22 @@ export function showAndHideElementsForRoles() {
         }
     });
 }
+export function clearAuthCookies() {
+    deleteToken();
+    deleteRole();
+}
+
+export function handle401(response) {
+    if (response.status === 401) {
+        alert("Session expirée. Merci de vous reconnecter.");
+        window.location.href = "/signin";
+        return true;
+    }
+    return false;
+}
+
+function isTokenExpired(token) {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const now = Math.floor(Date.now() / 1000);
+    return payload.exp < now;
+}

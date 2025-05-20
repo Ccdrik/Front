@@ -1,98 +1,113 @@
-// Router.js
-import Route from "./Route.js";
+// Router.js — version corrigée et prête à l'emploi
+
 import { allRoutes, websiteName } from "./allRoutes.js";
-import { isConnected, getRole, showAndHideElementsForRoles } from "/js/auth/auth.js";
+import Route from "./Route.js";
+import { getRole, isConnected, showAndHideElementsForRoles } from "../js/auth/auth.js";
 
-console.log("Rôle utilisateur :", getRole());
-console.log("isConnected:", isConnected);
+// Chargement initial après DOM prêt
+document.addEventListener("DOMContentLoaded", () => {
+    // Redirige /index.html vers / pour normaliser l'URL
+    if (window.location.pathname === "/index.html") {
+        history.replaceState({}, "", "/");
+    }
 
-const route404 = new Route("404", "Page introuvable", "/pages/404.html", []);
+    initRouter();
+    window.addEventListener("popstate", routerNavigation);
+});
 
-// Récupère la route correspondant à l'URL actuelle
-const getRouteByUrl = (url) => {
-    return allRoutes.find(route => route.url === url) || route404;
-};
+function initRouter() {
+    // Interception des clics sur les liens data-link
+    document.body.addEventListener("click", async (event) => {
+        const target = event.target.closest("a");
 
-const LoadContentPage = async () => {
+        if (target && target.matches("[data-link]")) {
+            event.preventDefault();
+            const path = target.getAttribute("href");
+            if (path) {
+                history.pushState({}, "", path);
+                await routerNavigation();
+            }
+        }
+    });
+
+    // Exécution immédiate de la première route
+    routerNavigation();
+}
+
+async function routerNavigation() {
     const path = window.location.pathname;
-    const actualRoute = getRouteByUrl(path);
+    const cleanedPath = path === "/index.html" ? "/" : path;
+    const route = allRoutes.find((r) => r.path === cleanedPath);
 
-    // Gestion des autorisations selon les rôles définis dans la route
-    const allRolesArray = actualRoute.authorize;
-    if (allRolesArray.length > 0) {
-        if (allRolesArray.includes("disconnected")) {
-            if (isConnected()) {
-                window.location.replace("/");
-                return;
-            }
-        } else {
-            const roleUser = getRole();
-            if (!allRolesArray.includes(roleUser)) {
-                window.location.replace("/");
-                return;
-            }
+    if (!route) {
+        return displayNotFound();
+    }
+
+    // Sécurité : rôle requis ?
+    if (route.roles && route.roles.length > 0) {
+        const role = getRole();
+        if (!isConnected() || !role || !route.roles.includes(role)) {
+            alert("Accès non autorisé");
+            history.pushState({}, "", "/signin");
+            await routerNavigation();
+            return;
         }
     }
 
     try {
-        // Chargement du contenu HTML de la page
-        const html = await fetch(actualRoute.pathHtml).then(res => res.text());
-        document.getElementById("main-page").innerHTML = html;
+        const res = await fetch(route.pathHtml);
+        if (!res.ok) throw new Error("Fichier HTML introuvable");
+        const html = await res.text();
+        const app = document.getElementById("app");
+        if (!app) throw new Error("Élément #app manquant dans index.html");
 
-        // Chargement dynamique du module JavaScript associé
-        if (actualRoute.pathJS) {
-            try {
-                const module = await import(actualRoute.pathJS) // Correction ici
-                if (module && typeof module.default === "function") {
-                    module.default();
-                } else if (module.initSignupPage) {
-                    module.initSignupPage();
-                } else if (module.initSigninPage) {
-                    module.initSigninPage();
-                }
-            } catch (e) {
-                console.error("Erreur lors du chargement du module JS :", e);
-            }
-        } else {
-            // En l'absence de module défini dans la route, on vérifie la route globale pour l'inscription ou la connexion
-            if (path === "/signup") {
-                const module = await import("./js/auth/signup.js");
-                module.initSignupPage();
-            } else if (path === "/signin") {
-                const module = await import("./js/auth/signin.js");
-                module.initSigninPage();
-            }
-        }
+        app.innerHTML = html;
+        document.title = `${route.title} - ${websiteName}`;
 
-        // Mise à jour du titre de la page
-        document.title = `${actualRoute.title} - ${websiteName}`;
-
-        // Gestion de l'affichage des éléments en fonction du rôle
         showAndHideElementsForRoles();
 
-    } catch (error) {
-        console.error("Erreur lors du chargement de la page :", error);
-        document.getElementById("main-page").innerHTML = "<p>Erreur de chargement de la page.</p>";
+        // Chargement JS spécifique à la route
+        if (route.pathJS) {
+            try {
+                const module = await import(`${route.pathJS}`);
+
+                if (typeof module.default === "function") {
+                    module.default();
+                } else {
+                    const routeName = extractNameFromPath(route.path);
+                    const initFuncName = `init${capitalizeFirstLetter(routeName)}Page`;
+                    if (typeof module[initFuncName] === "function") {
+                        module[initFuncName]();
+                    }
+                }
+            } catch (err) {
+                console.error("Erreur lors du chargement JS de la route:", err);
+            }
+        }
+    } catch (err) {
+        console.error("Erreur navigation:", err);
+        displayNotFound();
     }
-};
+}
 
-document.body.addEventListener('click', (event) => {
-    const target = event.target.closest('a');
-    if (target && target.href && target.origin === window.location.origin) {
-        event.preventDefault();
-        window.history.pushState({}, '', target.pathname);
-        LoadContentPage();
-    }
-});
+function displayNotFound() {
+    const app = document.getElementById("app");
+    if (!app) return;
+    app.innerHTML = `
+        <div class="container py-5 text-center">
+            <h1 class="display-4">404</h1>
+            <p class="lead">Page introuvable</p>
+            <a href="/" data-link class="btn btn-primary">Retour à l'accueil</a>
+        </div>
+    `;
+    document.title = `404 - ${websiteName}`;
+}
 
-const routeEvent = (event) => {
-    event.preventDefault();
-    window.history.pushState({}, "", event.target.href);
-    LoadContentPage();
-};
+function extractNameFromPath(path) {
+    const trimmed = path.replace("/", "");
+    return trimmed || "Home";
+}
 
-window.onpopstate = LoadContentPage;
-window.route = routeEvent;
-
-// Chargement initial de la page
-LoadContentPage();
+function capitalizeFirstLetter(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}

@@ -32,32 +32,32 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0" id="trajets">
                         <li class="nav-item">
-                            <a class="nav-link " href="/covoiturages">Accès aux co-voiturages</a>
+                            <a class="nav-link" href="/covoiturages" data-link>Accès aux co-voiturages</a>
                         </li>
                         <li class="nav-item" data-show="chauffeur">
-                            <a class="nav-link" href="/creertrajet">Creation d'un trajet</a>
+                            <a class="nav-link" href="/creertrajet" data-link>Creation d'un trajet</a>
                         </li>
                         <li class="nav-item" data-show="chauffeur">
-                            <a class="nav-link" href="/edittrajet">Modifier mon trajet</a>
+                            <a class="nav-link" href="/edittrajet" data-link>Modifier mon trajet</a>
                         </li>
                         <li class="nav-item" data-show="chauffeur">
-                            <a class="nav-link" href="/mestrajets">Mes trajets</a>
+                            <a class="nav-link" href="/mestrajets" data-link>Mes trajets</a>
                         </li>
                         <li class="nav-item" data-show="chauffeur">
-                            <a class="nav-link" href="/vehicule">Ajouter un véhicule</a>
+                            <a class="nav-link" href="/vehicule" data-link>Ajouter un véhicule</a>
                         </li>
 
                         <li class="nav-item" data-show="connected">
-                            <a class="nav-link" href="/account">Mon compte</a>
+                            <a class="nav-link" href="/account" data-link>Mon compte</a>
                         </li>
                         <li class="nav-item" data-show="admin">
-                            <a class="nav-link" href="/dashboard">Dashboard</a>
+                            <a class="nav-link" href="/dashboard" data-link>Dashboard</a>
                         </li>
                         <li class="nav-item" data-show="passager">
-                            <a class="nav-link" href="/reservations">Reservations</a>
+                            <a class="nav-link" href="/reservations" data-link>Reservations</a>
                         </li>
                         <li class="nav-item" data-show="disconnected">
-                            <a class="nav-link" href="/signin">Connexion</a>
+                            <a class="nav-link" href="/signin" data-link>Connexion</a>
                         </li>
                         <li class="nav-item" data-show="connected">
                             <button class="nav-link" id="signout-btn">Déconnexion</button>
@@ -66,6 +66,7 @@
         </nav>
     </header>
     <main id="main-page">
+        <div id="app" class="container"></div>
     </main>
     <footer class="bg-dark text-white text-center footer">
         <div class="row">
