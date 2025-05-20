@@ -1,39 +1,39 @@
-// js/auth/auth.js — centralise la logique par rôle
+// js/auth/auth.js
 
-export const tokenCookieName = "accesstoken";
+// === CONSTANTES ===
+export const tokenCookieName = "token";
 export const roleCookieName = "role";
 
-export function setCookie(name, value, days = 7) {
-    const expires = new Date(Date.now() + days * 864e5).toUTCString();
-    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+// === COOKIES ===
+export function setCookie(name, value, days = 1) {
+    const expires = new Date(Date.now() + days * 86400000).toUTCString();
+    document.cookie = `${name}=${value}; expires=${expires}; path=/`;
 }
 
 export function getCookie(name) {
-    return document.cookie
-        .split("; ")
-        .find(row => row.startsWith(name + "="))
-        ?.split("=")[1] ?? null;
+    const cookies = document.cookie.split(";").map(c => c.trim());
+    const cookie = cookies.find(c => c.startsWith(`${name}=`));
+    return cookie ? cookie.split("=")[1] : null;
 }
 
+export function deleteCookie(name) {
+    document.cookie = `${name}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;`;
+}
+
+// === TOKENS ===
 export function setToken(token) {
     setCookie(tokenCookieName, token);
 }
 
 export function getToken() {
-    const match = document.cookie.match(new RegExp(`(^| )${tokenCookieName}=([^;]+)`));
-    return match ? match[2] : null;
+    return getCookie(tokenCookieName);
 }
 
-export function clearAuthCookies() {
-    setCookie(tokenCookieName, '', -1);
-    setCookie(roleCookieName, '', -1);
+export function deleteToken() {
+    deleteCookie(tokenCookieName);
 }
 
-export function isConnected() {
-    const token = getToken();
-    return token !== null && token !== "";
-}
-
+// === ROLES ===
 export function setRole(role) {
     setCookie(roleCookieName, role);
 }
@@ -42,40 +42,30 @@ export function getRole() {
     return getCookie(roleCookieName);
 }
 
+export function deleteRole() {
+    deleteCookie(roleCookieName);
+}
+
+// === ÉTAT DE CONNEXION ===
+export function isConnected() {
+    return !!getToken();
+}
+
+// === AFFICHAGE DES ÉLÉMENTS SELON LE RÔLE ===
 export function showAndHideElementsForRoles() {
-    const connected = isConnected();
     const role = getRole();
-    console.log("Rôle utilisateur :", role);
-    console.log("isConnected:", isConnected);
 
-    document.querySelectorAll('[data-show]').forEach(el => {
-        const showCondition = el.dataset.show;
-        const shouldHide =
-            (showCondition === 'disconnected' && connected) ||
-            (showCondition === 'connected' && !connected) ||
-            (["passager", "chauffeur", "admin", "employe"].includes(showCondition) && (!connected || role !== showCondition));
-        el.classList.toggle("d-none", shouldHide);
+    document.querySelectorAll("[data-show]").forEach(elem => {
+        const showCondition = elem.getAttribute("data-show");
+
+        if (
+            (showCondition === "connected" && isConnected()) ||
+            (showCondition === "disconnected" && !isConnected()) ||
+            (showCondition === role)
+        ) {
+            elem.style.display = "";
+        } else {
+            elem.style.display = "none";
+        }
     });
 }
-
-export function handle401(response) {
-    if (response.status === 401) {
-        console.warn("Token expiré ou invalide, suppression des cookies et redirection.");
-        clearAuthCookies();
-        window.location.href = "/signin";
-        return true;
-    }
-    return false;
-}
-
-// Gestion du bouton de déconnexion
-document.addEventListener("DOMContentLoaded", () => {
-    const logoutBtn = document.getElementById("signout-btn");
-    if (!logoutBtn) return;
-
-    logoutBtn.addEventListener("click", () => {
-        clearAuthCookies();
-        alert("Déconnexion réussie !");
-        window.location.href = "/signin"; // Redirection vers la page de connexion
-    });
-});

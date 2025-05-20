@@ -1,1 +1,39 @@
-node_modules
+# === FICHIERS FRONT-END A IGNORER ===
+
+# Systèmes / éditeurs
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+
+# Dépendances JS (si jamais tu ajoutes npm plus tard)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Build / transpilation (si utilisé plus tard)
+dist/
+build/
+
+# Environnement
+.env
+.env.local
+
+# === BACKEND SYMFONY (dans backend/Api) ===
+
+/backend/Api/vendor/
+/backend/Api/var/
+/backend/Api/.env
+/backend/Api/.env.local
+/backend/Api/.DS_Store
+
+# Fichiers temporaires Symfony
+/backend/Api/public/bundles/
+/backend/Api/public/build/
+
+# Cache ou migration résiduels
+/backend/Api/migrations/*.php~
